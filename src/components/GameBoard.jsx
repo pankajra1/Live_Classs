@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
+import { Route } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import Routes from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -25,22 +27,29 @@ import floodImg from '../assets/flood.png';
 import tornadoImg from '../assets/tornado.png';
 import steamImg from '../assets/steam.png';
 import lavaImg from '../assets/lava.png';
+import { Navigate } from 'react-router-dom';
 
 // Combination logic
 const combinations = {
   'AirWater': cycloneImg,
+  'WaterAir': cycloneImg,
   'AirFire': firestormImg,
+  'FireAir': firestormImg,
   'WaterFire': steamImg,
+  'FireWater': steamImg,
+  'EarthAir': tornadoImg,
   'AirEarth': tornadoImg,
   'EarthWater': floodImg,
+  'WaterEarth': floodImg,
   'FireEarth': lavaImg,
+  'EarthFire': lavaImg,
   'Peace': peaceImg // Assuming 'Peace' goes alone
 };
 
 
 
-
- const GameBoard = () => {
+const GameBoard = () => {
+   const [isDuel, setIsDuel] = useState(false);
 
 
 const Card = ({ src, alt }) => {
@@ -184,6 +193,10 @@ const Card = ({ src, alt }) => {
 
   const handleSubmit = () => {
     console.log('Submitted combinations', selectedCards);
+    window.location.href = "./Duel";
+    window.localStorage.setItem('selectedCards', JSON(selectedCards));
+    // setIsDuel(true);
+    // <route path="./Duel" element={"/Duel"} />
   };
 
   
@@ -191,6 +204,10 @@ const Card = ({ src, alt }) => {
     setInitialCards(elementCards);
     setSelectedCards([[], [], []]);
   };
+
+  // if(isDuel){
+  //   return <Duel {...selectedCards} />;
+  // }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -213,7 +230,7 @@ const Card = ({ src, alt }) => {
             ))}
           </Grid>
           <div className="text-center mt-4">
-            <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 rounded-lg shadow">
+            <button onClick={()=>{handleSubmit()}} className="bg-blue-500 text-white p-2 rounded-lg shadow">
               Submit
             </button>
             <button onClick={handleReset} className="bg-blue-500 text-white p-2 rounded-lg shadow">
